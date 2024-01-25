@@ -50,6 +50,8 @@ avl* nouveauNoeud(Ville *ville);
 void infixe2(avl* a);
 void dixVilles(FILE* csv);
 void infixe_n(n_avl* a,FILE* csv,int *i);
+void liberer(avl* a);
+void liberer2(n_avl* a);
 
 //lire le trajet dans le csv
 Trajet* build_t(FILE* csv,long* pos) {
@@ -113,6 +115,8 @@ void ville_t(FILE* csv){
   }
   infixe(a, fichier);
   fclose(fichier);
+  liberer(a);
+  
   FILE* fichier2 = fopen("temp/temp_t2.csv", "r");
   if (fichier == NULL) {
      //erreur
@@ -298,6 +302,7 @@ Ville* build_ville(FILE* csv,long* pos){
   char* s1=malloc(sizeof(char)*10);
   if (fscanf(csv, "%99[^;];%99[^;];%99[^\n]", v->nom, s, s1)!=3){
     free(v);
+    printf("no");
     exit(1);
   }
   v->compteur=atoi(s);
@@ -468,9 +473,11 @@ n_avl* inserer_n(n_avl* a,Ville* ville){
 
 void affiche_n(n_avl* a,FILE* csv,int *i){
   if(a!=NULL && *i<10){
-    *i=*i+1;
     affiche_n(a->droite,csv,i);
-    fprintf(csv, "%s;%d;%d\n", a->ville->nom, a->ville->compteur, a->ville->compt_dep);
+    if(*i<10){
+    	fprintf(csv, "%s;%d;%d\n", a->ville->nom, a->ville->compteur, a->ville->compt_dep);
+    	*i=*i+1;
+    }
     affiche_n(a->gauche,csv,i);
   }
 }
@@ -497,10 +504,14 @@ void dixVilles(FILE* csv){
   *posfin=ftell(csv);
   rewind(csv);
   *pos=ftell(csv);
-
+	fgetc(csv);
+	fgetc(csv);
+	fgetc(csv);
+	fgetc(csv);
+	fgetc(csv);
   Ville* line=malloc(sizeof(Ville));
   if (line == NULL){
-    //erreur
+    printf("error");
   }
   
   line=build_ville(csv,pos);
@@ -518,9 +529,9 @@ void dixVilles(FILE* csv){
   int i=0;
   affiche_n(a,fichier2,&i);
   fclose(fichier2);
-
+  liberer2(a);
   
-  free(line);
+
   free(pos);
   free(posfin);
 }
@@ -557,12 +568,20 @@ void alphabetique(FILE* sortie){
   }
   fclose(csv);
   infixe(a, sortie);
-  free(line);
+  liberer(a);
   free(pos);
   free(posfin);
   
 }
 
+void liberer2(n_avl* a){
+	if(a!=NULL){
+		liberer2(a->gauche);
+		liberer2(a->droite);
+		free(a->ville);
+		free(a);
+	}
+}
 
 
 int main(int argc, char* argv[]) {
