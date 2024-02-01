@@ -11,8 +11,8 @@ if [ ! -d "temp" ]; then
     mkdir "temp"
 fi
 
-if [ ! -d "image" ]; then
-    mkdir "image"
+if [ ! -d "images" ]; then
+    mkdir "images"
 fi
 
 
