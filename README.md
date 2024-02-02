@@ -1,7 +1,7 @@
 # CY_Truck
 
 1) Prendre tout le contenu :
-     - Dossiers : data, gnuplot, progc
+     - Dossiers : data, gnuplot, exec
      - Fichiers : script.sh, Makefile, (README : optionnel)
 
        -> Les mettre tels quels dans un dossier sur votre machine (dossier de nom           quelconque)
