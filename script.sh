@@ -120,42 +120,22 @@ done
 
 ##ajouter le temps d'exec
 
-chemin_e="/temp"
-chemin_s="/images"
-verif=("temp_d1.csv, temp_d2.csv, temp_l.csv, temp_t.csv, temp_s.csv")
-
-while [ True ]; do 
-	for fichier in "${!graphique[@]}"; do
-		chemin_fichier="$chemin_e/$fichier"
-		
-		if [ "$chemin_fichier" == "temp_d1.csv" ]; then 
-			options_d1="set title 'Graphique traitement D1'; set xlabel 'Nombre de trajets'; set ylabel 'Conducteurs';"
-			gnuplot -persist <<-EOFMarker
-				$options_d1
-				set terminal pngcairo enhanced 'arial,10' size 800,600
-				set output '$chemin_s/image_d1.png'
-				set style data histograms
-				set style histogram rowstacked 
-				set boxwidth 0.5 
-				set format x "%d"
-				set ytics out 
-				set yrange [0:*]
-				plot '$chemin_fichier' using 2:yticslabels(1) with boxes title 'Nombre de  trajets'
-			EOFMarker
-		fi
-		if [ "$chemin_fichier" == "temp_d2.csv" ]; then 
-			# gnuplot d2
-		fi
-		if [ "$chemin_fichier" == "temp_l.csv" ]; then 
-			# gnuplot l
-		fi
-		if [ "$chemin_fichier" == "temp_t.csv" ]; then 
-			# gnuplot t
-		fi
-		if [ "$chemin_fichier" == "temp_s.csv" ]; then 
-			# gnuplot s
-		fi
-	done
+for fichier in ./temp/*.csv; do
+	if [ "$(basename "$fichier")" == "temp_d1.csv" ]; then
+		gnuplot -persist gnuplot/gp_d1.gp
+	fi
+	if [ "$(basename "$fichier")" == "temp_d2.csv" ]; then
+		gnuplot -persist gnuplot/gp_d2.gp
+	fi
+	if [ "$(basename "$fichier")" == "temp_l.csv" ]; then
+		gnuplot -persist gnuplot/gp_l.gp
+	fi
+	if [ "$(basename "$fichier")" == "temp_t3.csv" ]; then
+		gnuplot -persist gnuplot/gp_t.gp
+	fi
+	if [ "$(basename "$fichier")" == "temp_s1.csv" ]; then
+		gnuplot -persist gnuplot/gp_s.gp
+	fi
 done
 
 
