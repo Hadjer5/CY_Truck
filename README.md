@@ -1,7 +1,7 @@
 # CY_Truck
 
 1) Prendre tout le contenu :
-     - Dossiers : data, gnuplot, progc
+     - Dossiers : data, gnuplot, exec  (les dossiers "temp" et "images" sont crées avec le script lors de l'exécution, le dossier "exec" est le dossier "progc" demandé dans la consigne)
      - Fichiers : script.sh, Makefile, (README : optionnel)
 
        -> Les mettre tels quels dans un dossier sur votre machine (dossier de nom           quelconque)
@@ -29,3 +29,4 @@
 5) Accès aux fichiers temporaires :
     - Seuls les fichiers temporaires "finaux" seront disponibles dans le dossier "temp"
       -> De cette manière, le contrôle plus précis des données pourra être possible
+

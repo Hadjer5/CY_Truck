@@ -23,14 +23,22 @@ function compil {
 }
 
 
+
 # Vérifie si le dossier existe
 if [ ! -d "temp" ]; then
     # Crée le dossier s'il n'existe pas
     mkdir "temp"
 fi
-
+if [ -d "temp" ]; then
+    # Supprime les fichiers présents dans le dossier
+    rm temp/*
+fi
 if [ ! -d "images" ]; then
     mkdir "images"
+fi
+if [ -d "images" ]; then
+    # Supprime les fichiers présents dans le dossier
+    rm images/*
 fi
 
 
@@ -44,6 +52,7 @@ fi
 #count[$6] s'incremente a chaque ligne du csv et compte le nombre de trajet de chaque conducteur(compte le nb d'occurence)
 #la boucle for affiche chaque conducteur suivi du nombre de trajet qu'il a effectué
 
+deb=$(date +%s)
 
 i=0
 while [ True ]; do
@@ -59,12 +68,16 @@ while [ True ]; do
     sort -t ';' -k2 -n -r -o temp/temp.csv temp/temp.csv
     #10 premiers conducteurs
     head -n 10 temp/temp.csv > temp/temp_d1.csv
+    #temps exécution
+    fin_d1=$(date +%s)
+    temps_exec_d1=$((fin_d1 - deb))
     #supp fichier temporaire
     rm temp/temp.csv
 
     file[i]="temp_d1.csv"
     i=$((i+1))
     shift 1
+    echo "Temps d'exécution pour le traitement D1 : $temps_exec_d1 seconde(s)"
   
   elif [ "$1" = "-d2" ]; then
     awk -F';' 'NR > 1 {
@@ -78,12 +91,16 @@ while [ True ]; do
     sort -t ';' -k2 -n -r -o temp/temp.csv temp/temp.csv
     #10 premiers conducteurs
     head -n 10 temp/temp.csv > temp/temp_d2.csv
+    #temps exécution
+    fin_d2=$(date +%s)
+    temps_exec_d2=$((fin_d2 - deb))
     #supp fichier temporaire
     rm temp/temp.csv
 
     file[i]="temp_d2.csv"
     i=$((i+1))
     shift 1
+    echo "Temps d'exécution pour le traitement D2 : $temps_exec_d2 seconde(s)"
 
   elif [ "$1" = "-l" ]; then
     awk -F';' 'NR > 1 {
@@ -99,12 +116,16 @@ while [ True ]; do
     head -n 10 temp/temp.csv > temp/temp_l.csv
     #classer les id dans l'odre croissant
     sort -t ';' -k1 -n -o temp/temp_l.csv temp/temp_l.csv
+    #temps exécution
+    fin_l=$(date +%s)
+    temps_exec_l=$((fin_d2 - deb))
     #supp fichier temporaire
     rm temp/temp.csv
     
     file[i]="temp_l.csv"
     i=$((i+1))
     shift 1
+    echo "Temps d'exécution pour le traitement L : $temps_exec_l seconde(s)"
 
   elif [ "$1" = "-t" ]; then
     awk -F';' 'NR > 1 {
@@ -153,7 +174,7 @@ done
 ##c et makefile
 
 
-##ajouter le temps d'exec
+### Parcourt le dossier temp et pour chaque traitement produit à l'aide de GnuPlot le graphique associé qui est ensuite stocké dans le dossier "images"
 
 for fichier in ./temp/*.csv; do
 	if [ "$(basename "$fichier")" == "temp_d1.csv" ]; then
@@ -165,20 +186,12 @@ for fichier in ./temp/*.csv; do
 	if [ "$(basename "$fichier")" == "temp_l.csv" ]; then
 		gnuplot -persist gnuplot/gp_l.gp
 	fi
-	if [ "$(basename "$fichier")" == "temp_t3.csv" ]; then
+	if [ "$(basename "$fichier")" == "temp_tf.csv" ]; then
 		gnuplot -persist gnuplot/gp_t.gp
 	fi
-	if [ "$(basename "$fichier")" == "temp_s1.csv" ]; then
+	if [ "$(basename "$fichier")" == "temp_sf.csv" ]; then
 		gnuplot -persist gnuplot/gp_s.gp
 	fi
 done
-
-
-
-
-
-
-
-
 
 

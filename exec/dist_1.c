@@ -157,7 +157,7 @@ void s_liberer(s_avl *a) {
   }
 }
 
-void dist(FILE *csv, FILE *sortie) {
+void dist(FILE *csv,FILE* sortie) {
   long *pos = malloc(sizeof(long));
   if (pos == NULL) {
     exit(2);
@@ -193,7 +193,7 @@ void dist(FILE *csv, FILE *sortie) {
   if (fichier2 == NULL) {
     exit(1);
   }
-  order(fichier2, sortie);
+  order(fichier2,sortie);
   fclose(fichier2);
 }
 
@@ -224,15 +224,6 @@ s_trajet1 *s_build1(FILE *csv, long *pos) {
     free(s);
     exit(1);
   }
-  if (strcmp(s1, "") == 0 || strcmp(s1, ";") == 0) {
-    free(s);
-    free(s1);
-    free(s2);
-    free(s3);
-    free(s4);
-    *pos = ftell(csv);
-    return s;
-  }
   s->id = atoi(s1);
   s->min = atof(s2);
   s->max = atof(s3);
@@ -259,15 +250,16 @@ s_avl1 *noeud1(s_trajet1 *t) {
   return a;
 }
 
-int s_hauteur1(s_avl1 *a) {
-  if (a == NULL) {
+int s_hauteur1(s_avl1 *a){
+  if(a==NULL){
     return 0;
-  } else {
+  }
+  else{
     return a->hauteur;
   }
 }
 
-int s_equilibre1(s_avl1 *a) {
+int s_equilibre1(s_avl1* a){
   if (a == NULL) {
     return 0;
   } else {
@@ -275,46 +267,48 @@ int s_equilibre1(s_avl1 *a) {
   }
 }
 
-s_avl1 *s_rotationgauche1(s_avl1 *noeud) {
-  s_avl1 *tmp = noeud->droite;
+s_avl1* s_rotationgauche1(s_avl1* noeud){
+  s_avl1* tmp = noeud->droite;
   noeud->droite = tmp->gauche;
   tmp->gauche = noeud;
-  noeud->hauteur =
-      max(s_hauteur1(noeud->gauche), s_hauteur1(noeud->droite)) + 1;
+  noeud->hauteur = max(s_hauteur1(noeud->gauche), s_hauteur1(noeud->droite)) + 1;
   tmp->hauteur = max(s_hauteur1(tmp->gauche), s_hauteur1(tmp->droite)) + 1;
   return tmp;
 }
 
-s_avl1 *s_rotationdroite1(s_avl1 *noeud) {
-  s_avl1 *tmp = noeud->gauche;
+s_avl1* s_rotationdroite1(s_avl1* noeud){
+  s_avl1* tmp = noeud->gauche;
   noeud->gauche = tmp->droite;
   tmp->droite = noeud;
-  noeud->hauteur =
-      max(s_hauteur1(noeud->gauche), s_hauteur1(noeud->droite)) + 1;
+  noeud->hauteur = max(s_hauteur1(noeud->gauche), s_hauteur1(noeud->droite)) + 1;
   tmp->hauteur = max(s_hauteur1(tmp->gauche), s_hauteur1(tmp->droite)) + 1;
   return tmp;
 }
 
-s_avl1 *s_equilibrer1(s_avl1 *a) {
+s_avl1* s_equilibrer1(s_avl1* a){
   int equilibre = s_equilibre1(a);
-  if (equilibre > 1) {
-    if (s_equilibre1(a->gauche) >= 0) {
-      return s_rotationdroite1(a);
-    } else {
-      a->gauche = s_rotationgauche1(a->gauche);
+  if(equilibre>1){
+    if(s_equilibre1(a->gauche)>=0){
       return s_rotationdroite1(a);
     }
+    else{
+      a->gauche = s_rotationgauche1(a->gauche);
+      return s_rotationdroite1(a);
+    }    
   }
-  if (equilibre < -1) {
-    if (s_equilibre1(a->droite) <= 0) {
+  if(equilibre<-1){
+    if(s_equilibre1(a->droite)<=0){
       return s_rotationgauche1(a);
-    } else {
+    }
+    else{
       a->droite = s_rotationdroite1(a->droite);
       return s_rotationgauche1(a);
     }
   }
   return a;
 }
+
+
 
 s_avl1 *inserer_s1(s_avl1 *a, s_trajet1 *t) {
   if (a == NULL) {
@@ -326,25 +320,24 @@ s_avl1 *inserer_s1(s_avl1 *a, s_trajet1 *t) {
       a->droite = inserer_s1(a->droite, t);
     }
   }
-  a->hauteur = 1 + max(s_hauteur1(a->gauche), s_hauteur1(a->droite));
-  a = s_equilibrer1(a);
+  a->hauteur = 1 + max(s_hauteur1(a->gauche),s_hauteur1(a->droite));
+  a=s_equilibrer1(a);
   return a;
 }
 
-void s_affiche1(s_avl1 *a, FILE *csv, int *i) {
-  if (a != NULL && *i < 50) {
-    s_affiche1(a->gauche, csv, i);
-    if (*i < 50) {
-      fprintf(csv, "%d;%f;%f;%f\n", a->trajet->id, a->trajet->min,
-              a->trajet->max, a->trajet->moy);
-      *i = *i + 1;
+void s_affiche1(s_avl1 *a, FILE *csv,int *i){
+  if(a!=NULL && * i <50){
+    s_affiche1(a->gauche, csv,i);
+    if(*i < 50){
+      fprintf(csv, "%d;%f;%f;%f\n", a->trajet->id, a->trajet->min, a->trajet->max, a->trajet->moy);
+      *i=*i+1;
     }
-    s_affiche1(a->droite, csv, i);
+    s_affiche1(a->droite, csv,i);
   }
 }
 
-void s_liberer1(s_avl1 *a) {
-  if (a != NULL) {
+void s_liberer1(s_avl1 *a){
+  if(a!=NULL){
     s_liberer1(a->gauche);
     s_liberer1(a->droite);
     free(a->trajet);
@@ -352,7 +345,7 @@ void s_liberer1(s_avl1 *a) {
   }
 }
 
-void order(FILE *csv, FILE *sortie) {
+void order(FILE *csv,FILE* sortie) {
   long *pos = malloc(sizeof(long));
   if (pos == NULL) {
     exit(2);
@@ -367,17 +360,14 @@ void order(FILE *csv, FILE *sortie) {
   *pos = ftell(csv);
 
   s_trajet1 *line = s_build1(csv, pos);
-  if (line == NULL) {
-    line = s_build1(csv, pos);
-  }
   s_avl1 *a = noeud1(line);
-  int i = 0;
+  int i=0;
 
-  while ((*pos) != (*posfin)) {
+  while ((*pos) != (*posfin)){
     line = s_build1(csv, pos);
     a = inserer_s1(a, line);
   }
-  s_affiche1(a, sortie, &i);
+  s_affiche1(a, sortie,&i);
   free(pos);
   free(posfin);
   s_liberer1(a);
