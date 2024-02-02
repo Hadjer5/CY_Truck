@@ -7,7 +7,7 @@ function compil {
   local arg1=$1
   local arg2=$2
 
-  make -f Makefile_1
+  make -f Makefile
 
   ./main "$arg1" "$arg2"
 
@@ -19,7 +19,7 @@ function compil {
     echo "Exécution réussie"
   fi
 
-  make -f Makefile_1 clean
+  make -f Makefile clean
 }
 
 
@@ -29,8 +29,8 @@ if [ ! -d "temp" ]; then
     mkdir "temp"
 fi
 
-if [ ! -d "image" ]; then
-    mkdir "image"
+if [ ! -d "images" ]; then
+    mkdir "images"
 fi
 
 
