@@ -56,8 +56,23 @@ deb=$(date +%s)
 
 while [ True ]; do
 	if [ "$1" = "-h" ]; then 
-    	echo "blablabla"
-    	break
+    	echo "AIDE"
+     	echo "Commande : bash script.sh data/data.csv [ options ]"   
+      	echo "Vous pouvez entrer plusieurs options"
+       	echo "Options :"
+	echo "-d1 : Conducteurs avec le plus de trajets"
+ 	echo "Sortie : Histogramme Noms conducteurs / Nombre de trajets effectués"
+  	echo "-d2 : Conducteurs avec les plus grandes distances parcourues"
+   	echo "Sortie : Histogramme Noms conducteurs / Distance totale parcourue"
+    	echo "-l : 10 plus longs trajets"
+     	echo "Sortie : Histogramme Distances en km / Identifiants trajets"
+ 	echo "-t : 10 villes plus traversées"
+     	echo "Sortie : Histogramme Nombre de trajets / Nom villes"
+      	echo "Avec pour chaque ville 2 barres : Nb. Trajets tot la traversant / Nb. fois ville de départ"
+    	echo "-s : Statistiques étapes"
+	echo "Sortie : Courbes min/max/moy Distances en km / Identifiants trajets"
+ 	echo "FIN AIDE"
+ 	break
   
   elif [ "$1" = "-d1" ]; then 
     awk -F';' 'NR > 1 {
