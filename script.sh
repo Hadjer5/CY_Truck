@@ -3,6 +3,24 @@
 input_file="$1"
 shift 1
 
+function compil {
+  local arg1=$1
+  local arg2=$2
+
+  make -f Makefile_1
+
+  ./main "$arg1" "$arg2"
+
+  if [ $? -eq 1 ]; then
+    echo "Erreur fichier"
+  elif [ $? -eq 2 ]; then
+    echo "Erreur allocation mémoire"
+  elif [ $? -eq 0 ]; then
+    echo "Exécution réussie"
+  fi
+
+  make -f Makefile_1 clean
+}
 
 
 # Vérifie si le dossier existe
@@ -11,8 +29,8 @@ if [ ! -d "temp" ]; then
     mkdir "temp"
 fi
 
-if [ ! -d "images" ]; then
-    mkdir "images"
+if [ ! -d "image" ]; then
+    mkdir "image"
 fi
 
 
@@ -95,15 +113,32 @@ while [ True ]; do
   
     file[i]="temp_t.csv"
     i=$((i+1))
+
+    #compilation
+    cd exec
+    compil "../temp/temp_t.csv" "../temp/temp_tf.csv"
+    cd ..
+    rm temp/temp_t.csv temp/temp_t2.csv temp/temp_t3.csv
+    shift 1
+
+  elif [ "$1" = "-s" ]; then
+    awk -F';' 'NR > 1 {
+      printf("%s;%s\n", $1, $5)
+  }' "$input_file" > temp/temp_s.csv
+
+    file[i]="temp_s.csv"
+
+    #compilation
+    cd exec
+    compil "../temp/temp_s.csv" "../temp/temp_sf.csv"
+    cd ..
+    rm temp/temp_s.csv temp/temp_s1.csv
+    
+    i=$((i+1))
     shift 1
   else
     break
   fi
-  
-done
-
-for element in "${file[@]}"; do
-    echo "$element"
 done
 
 ###Verification validite (csv existe, nombre d'arguments etc)
